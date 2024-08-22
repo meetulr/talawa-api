@@ -412,6 +412,11 @@ export const inputs = gql`
     youTube: String
   }
 
+  input AddPeopleToUserTagInput {
+    userIds: [ID!]!
+    tagId: ID!
+  }
+
   input ToggleUserTagAssignInput {
     userId: ID!
     tagId: ID!

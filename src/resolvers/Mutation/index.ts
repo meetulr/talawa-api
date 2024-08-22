@@ -9,6 +9,7 @@ import { addUserCustomData } from "./addUserCustomData";
 import { addUserImage } from "./addUserImage";
 import { addUserToGroupChat } from "./addUserToGroupChat";
 import { addUserToUserFamily } from "./addUserToUserFamily";
+import { addPeopleToUserTag } from "./addPeopleToUserTag";
 import { adminRemoveGroup } from "./adminRemoveGroup";
 import { assignUserTag } from "./assignUserTag";
 import { blockPluginCreationBySuperadmin } from "./blockPluginCreationBySuperadmin";
@@ -136,6 +137,7 @@ export const Mutation: MutationResolvers = {
   addUserToGroupChat,
   adminRemoveGroup,
   addUserToUserFamily,
+  addPeopleToUserTag,
   removeUserFamily,
   removeUserFromUserFamily,
   createUserFamily,
