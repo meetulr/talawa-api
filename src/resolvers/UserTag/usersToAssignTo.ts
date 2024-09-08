@@ -5,12 +5,14 @@ import {
   type DefaultGraphQLArgumentError,
   type ParseGraphQLConnectionCursorArguments,
   type ParseGraphQLConnectionCursorResult,
+  getCommonGraphQLConnectionFilter,
+  getCommonGraphQLConnectionSort,
   parseGraphQLConnectionArguments,
   transformToDefaultGraphQLConnection,
 } from "../../utilities/graphQLConnection";
 import { GraphQLError } from "graphql";
 import { MAXIMUM_FETCH_LIMIT } from "../../constants";
-import type { Types } from "mongoose";
+import { Types } from "mongoose";
 
 /**
  * Resolver function for the `usersAssignedTo` field of a `UserTag`.
@@ -57,13 +59,25 @@ export const usersToAssignTo: UserTagResolvers["usersToAssignTo"] = async (
 
   const { parsedArgs } = parseGraphQLConnectionArgumentsResult;
 
+  const filter = getCommonGraphQLConnectionFilter({
+    cursor: parsedArgs.cursor,
+    direction: parsedArgs.direction,
+  });
+
+  const sort = getCommonGraphQLConnectionSort({
+    direction: parsedArgs.direction,
+  });
+
   const [objectList, totalCountResult] = await Promise.all([
     // find all the users belonging to the current organization
     // who haven't been assigned to this tag
     User.aggregate([
       // Step 1: Match users whose joinedOrgs contains the orgId
       {
-        $match: { joinedOrganizations: parent.organizationId },
+        $match: {
+          ...filter,
+          joinedOrganizations: parent.organizationId,
+        },
       },
       // Step 2: Perform a left join with TagUser collection on userId
       {
@@ -83,6 +97,9 @@ export const usersToAssignTo: UserTagResolvers["usersToAssignTo"] = async (
             },
           },
         },
+      },
+      {
+        $sort: { ...sort },
       },
       { $limit: parsedArgs.limit },
     ]),
@@ -149,25 +166,25 @@ export const parseCursor = async ({
 }: ParseGraphQLConnectionCursorArguments & {
   tagId: string | Types.ObjectId;
 }): ParseGraphQLConnectionCursorResult<ParsedCursor> => {
-  const errors: DefaultGraphQLArgumentError[] = [];
-  const tagUser = await TagUser.findOne({
-    _id: cursorValue,
-    tagId,
-  });
+  // const errors: DefaultGraphQLArgumentError[] = [];
+  // const tagUser = await TagUser.findOne({
+  //   _id: cursorValue,
+  //   tagId,
+  // });
 
-  if (!tagUser) {
-    errors.push({
-      message: `Argument ${cursorName} is an invalid cursor.`,
-      path: cursorPath,
-    });
-  }
+  // if (!tagUser) {
+  //   errors.push({
+  //     message: `Argument ${cursorName} is an invalid cursor.`,
+  //     path: cursorPath,
+  //   });
+  // }
 
-  if (errors.length !== 0) {
-    return {
-      errors,
-      isSuccessful: false,
-    };
-  }
+  // if (errors.length !== 0) {
+  //   return {
+  //     errors,
+  //     isSuccessful: false,
+  //   };
+  // }
 
   return {
     isSuccessful: true,

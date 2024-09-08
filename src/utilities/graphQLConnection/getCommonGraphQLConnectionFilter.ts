@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import type { GraphQLConnectionTraversalDirection } from "./index";
 
 /**
@@ -6,12 +7,12 @@ import type { GraphQLConnectionTraversalDirection } from "./index";
 type CommonGraphQLConnectionFilter =
   | {
       _id: {
-        $lt: string;
+        $lt: Types.ObjectId;
       };
     }
   | {
       _id: {
-        $gt: string;
+        $gt: Types.ObjectId;
       };
     }
   | Record<string, never>;
@@ -52,13 +53,13 @@ export function getCommonGraphQLConnectionFilter({
     if (direction === "BACKWARD") {
       return {
         _id: {
-          $gt: cursor,
+          $gt: new Types.ObjectId(cursor),
         },
       };
     } else {
       return {
         _id: {
-          $lt: cursor,
+          $lt: new Types.ObjectId(cursor),
         },
       };
     }
