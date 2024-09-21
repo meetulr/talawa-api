@@ -417,6 +417,11 @@ export const inputs = gql`
     tagId: ID!
   }
 
+  input TagActionsInput {
+    currentTagId: ID!
+    selectedTagIds: [ID!]!
+  }
+
   input ToggleUserTagAssignInput {
     userId: ID!
     tagId: ID!

@@ -10,6 +10,7 @@ import { addUserImage } from "./addUserImage";
 import { addUserToGroupChat } from "./addUserToGroupChat";
 import { addUserToUserFamily } from "./addUserToUserFamily";
 import { addPeopleToUserTag } from "./addPeopleToUserTag";
+import { addToUserTags } from "./addToUserTags";
 import { adminRemoveGroup } from "./adminRemoveGroup";
 import { assignUserTag } from "./assignUserTag";
 import { blockPluginCreationBySuperadmin } from "./blockPluginCreationBySuperadmin";
@@ -87,6 +88,7 @@ import { removeUserFromGroupChat } from "./removeUserFromGroupChat";
 import { removeUserFromUserFamily } from "./removeUserFromUserFamily";
 import { removeUserImage } from "./removeUserImage";
 import { removeUserTag } from "./removeUserTag";
+import { removeFromUserTags } from "./removeFromUserTags";
 import { resetCommunity } from "./resetCommunity";
 import { revokeRefreshTokenForUser } from "./revokeRefreshTokenForUser";
 import { saveFcmToken } from "./saveFcmToken";
@@ -138,6 +140,7 @@ export const Mutation: MutationResolvers = {
   adminRemoveGroup,
   addUserToUserFamily,
   addPeopleToUserTag,
+  addToUserTags,
   removeUserFamily,
   removeUserFromUserFamily,
   createUserFamily,
@@ -214,6 +217,7 @@ export const Mutation: MutationResolvers = {
   removeUserFromGroupChat,
   removeUserImage,
   removeUserTag,
+  removeFromUserTags,
   resetCommunity,
   revokeRefreshTokenForUser,
   saveFcmToken,

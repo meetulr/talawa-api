@@ -39,6 +39,8 @@ export const mutations = gql`
 
     addPeopleToUserTag(input: AddPeopleToUserTagInput!): UserTag @auth
 
+    addToUserTags(input: TagActionsInput!): UserTag @auth
+
     removeUserFromUserFamily(userId: ID!, familyId: ID!): UserFamily! @auth
 
     removeUserFamily(familyId: ID!): UserFamily! @auth
@@ -234,6 +236,8 @@ export const mutations = gql`
     removeAgendaSection(id: ID!): ID!
 
     removeUserTag(id: ID!): UserTag @auth
+
+    removeFromUserTags(input: TagActionsInput!): UserTag @auth
 
     removeSampleOrganization: Boolean! @auth
 

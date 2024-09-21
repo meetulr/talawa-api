@@ -1165,6 +1165,7 @@ export type Mutation = {
   addOrganizationImage: Organization;
   addPeopleToUserTag?: Maybe<UserTag>;
   addPledgeToFundraisingCampaign: FundraisingCampaignPledge;
+  addToUserTags?: Maybe<UserTag>;
   addUserCustomData: UserCustomData;
   addUserImage: User;
   addUserToGroupChat: GroupChat;
@@ -1234,6 +1235,7 @@ export type Mutation = {
   removeEventAttendee: User;
   removeEventVolunteer: EventVolunteer;
   removeEventVolunteerGroup: EventVolunteerGroup;
+  removeFromUserTags?: Maybe<UserTag>;
   removeFund: Fund;
   removeFundraisingCampaign: FundraisingCampaign;
   removeFundraisingCampaignPledge: FundraisingCampaignPledge;
@@ -1329,6 +1331,11 @@ export type MutationAddPeopleToUserTagArgs = {
 export type MutationAddPledgeToFundraisingCampaignArgs = {
   campaignId: Scalars['ID']['input'];
   pledgeId: Scalars['ID']['input'];
+};
+
+
+export type MutationAddToUserTagsArgs = {
+  input: TagActionsInput;
 };
 
 
@@ -1686,6 +1693,11 @@ export type MutationRemoveEventVolunteerArgs = {
 
 export type MutationRemoveEventVolunteerGroupArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationRemoveFromUserTagsArgs = {
+  input: TagActionsInput;
 };
 
 
@@ -2757,6 +2769,11 @@ export type SubscriptionMessageSentToGroupChatArgs = {
   userId: Scalars['ID']['input'];
 };
 
+export type TagActionsInput = {
+  currentTagId: Scalars['ID']['input'];
+  selectedTagIds: Array<Scalars['ID']['input']>;
+};
+
 export type ToggleUserTagAssignInput = {
   tagId: Scalars['ID']['input'];
   userId: Scalars['ID']['input'];
@@ -3477,6 +3494,7 @@ export type ResolversTypes = {
   Status: Status;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Subscription: ResolverTypeWrapper<{}>;
+  TagActionsInput: TagActionsInput;
   Time: ResolverTypeWrapper<Scalars['Time']['output']>;
   ToggleUserTagAssignInput: ToggleUserTagAssignInput;
   Translation: ResolverTypeWrapper<Translation>;
@@ -3674,6 +3692,7 @@ export type ResolversParentTypes = {
   SocialMediaUrlsInput: SocialMediaUrlsInput;
   String: Scalars['String']['output'];
   Subscription: {};
+  TagActionsInput: TagActionsInput;
   Time: Scalars['Time']['output'];
   ToggleUserTagAssignInput: ToggleUserTagAssignInput;
   Translation: Translation;
@@ -4334,6 +4353,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   addOrganizationImage?: Resolver<ResolversTypes['Organization'], ParentType, ContextType, RequireFields<MutationAddOrganizationImageArgs, 'file' | 'organizationId'>>;
   addPeopleToUserTag?: Resolver<Maybe<ResolversTypes['UserTag']>, ParentType, ContextType, RequireFields<MutationAddPeopleToUserTagArgs, 'input'>>;
   addPledgeToFundraisingCampaign?: Resolver<ResolversTypes['FundraisingCampaignPledge'], ParentType, ContextType, RequireFields<MutationAddPledgeToFundraisingCampaignArgs, 'campaignId' | 'pledgeId'>>;
+  addToUserTags?: Resolver<Maybe<ResolversTypes['UserTag']>, ParentType, ContextType, RequireFields<MutationAddToUserTagsArgs, 'input'>>;
   addUserCustomData?: Resolver<ResolversTypes['UserCustomData'], ParentType, ContextType, RequireFields<MutationAddUserCustomDataArgs, 'dataName' | 'dataValue' | 'organizationId'>>;
   addUserImage?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationAddUserImageArgs, 'file'>>;
   addUserToGroupChat?: Resolver<ResolversTypes['GroupChat'], ParentType, ContextType, RequireFields<MutationAddUserToGroupChatArgs, 'chatId' | 'userId'>>;
@@ -4403,6 +4423,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   removeEventAttendee?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationRemoveEventAttendeeArgs, 'data'>>;
   removeEventVolunteer?: Resolver<ResolversTypes['EventVolunteer'], ParentType, ContextType, RequireFields<MutationRemoveEventVolunteerArgs, 'id'>>;
   removeEventVolunteerGroup?: Resolver<ResolversTypes['EventVolunteerGroup'], ParentType, ContextType, RequireFields<MutationRemoveEventVolunteerGroupArgs, 'id'>>;
+  removeFromUserTags?: Resolver<Maybe<ResolversTypes['UserTag']>, ParentType, ContextType, RequireFields<MutationRemoveFromUserTagsArgs, 'input'>>;
   removeFund?: Resolver<ResolversTypes['Fund'], ParentType, ContextType, RequireFields<MutationRemoveFundArgs, 'id'>>;
   removeFundraisingCampaign?: Resolver<ResolversTypes['FundraisingCampaign'], ParentType, ContextType, RequireFields<MutationRemoveFundraisingCampaignArgs, 'id'>>;
   removeFundraisingCampaignPledge?: Resolver<ResolversTypes['FundraisingCampaignPledge'], ParentType, ContextType, RequireFields<MutationRemoveFundraisingCampaignPledgeArgs, 'id'>>;
