@@ -80,6 +80,7 @@ export const mutations = gql`
 
     createActionItemCategory(
       name: String!
+      isDisabled: Boolean!
       organizationId: ID!
     ): ActionItemCategory! @auth
 
@@ -213,8 +214,6 @@ export const mutations = gql`
     removeAgendaItem(id: ID!): AgendaItem!
 
     removeEventVolunteer(id: ID!): EventVolunteer! @auth
-    removeFund(id: ID!): Fund! @auth
-    removeFundraisingCampaign(id: ID!): FundraisingCampaign! @auth
     removeFundraisingCampaignPledge(id: ID!): FundraisingCampaignPledge! @auth
 
     removeEventVolunteerGroup(id: ID!): EventVolunteerGroup! @auth
