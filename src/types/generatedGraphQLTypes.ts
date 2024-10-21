@@ -1251,8 +1251,6 @@ export type Mutation = {
   removeEventVolunteer: EventVolunteer;
   removeEventVolunteerGroup: EventVolunteerGroup;
   removeFromUserTags?: Maybe<UserTag>;
-  removeFund: Fund;
-  removeFundraisingCampaign: FundraisingCampaign;
   removeFundraisingCampaignPledge: FundraisingCampaignPledge;
   removeGroupChat: GroupChat;
   removeMember: Organization;
@@ -1715,16 +1713,6 @@ export type MutationRemoveEventVolunteerGroupArgs = {
 
 export type MutationRemoveFromUserTagsArgs = {
   input: TagActionsInput;
-};
-
-
-export type MutationRemoveFundArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationRemoveFundraisingCampaignArgs = {
-  id: Scalars['ID']['input'];
 };
 
 
@@ -3003,6 +2991,7 @@ export type User = {
   pluginCreationAllowed: Scalars['Boolean']['output'];
   posts?: Maybe<PostsConnection>;
   registeredEvents?: Maybe<Array<Maybe<Event>>>;
+  tagsAssigned?: Maybe<Array<Maybe<UserTag>>>;
   tagsAssignedWith?: Maybe<UserTagsConnection>;
   updatedAt: Scalars['DateTime']['output'];
 };
@@ -4455,8 +4444,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   removeEventVolunteer?: Resolver<ResolversTypes['EventVolunteer'], ParentType, ContextType, RequireFields<MutationRemoveEventVolunteerArgs, 'id'>>;
   removeEventVolunteerGroup?: Resolver<ResolversTypes['EventVolunteerGroup'], ParentType, ContextType, RequireFields<MutationRemoveEventVolunteerGroupArgs, 'id'>>;
   removeFromUserTags?: Resolver<Maybe<ResolversTypes['UserTag']>, ParentType, ContextType, RequireFields<MutationRemoveFromUserTagsArgs, 'input'>>;
-  removeFund?: Resolver<ResolversTypes['Fund'], ParentType, ContextType, RequireFields<MutationRemoveFundArgs, 'id'>>;
-  removeFundraisingCampaign?: Resolver<ResolversTypes['FundraisingCampaign'], ParentType, ContextType, RequireFields<MutationRemoveFundraisingCampaignArgs, 'id'>>;
   removeFundraisingCampaignPledge?: Resolver<ResolversTypes['FundraisingCampaignPledge'], ParentType, ContextType, RequireFields<MutationRemoveFundraisingCampaignPledgeArgs, 'id'>>;
   removeGroupChat?: Resolver<ResolversTypes['GroupChat'], ParentType, ContextType, RequireFields<MutationRemoveGroupChatArgs, 'chatId'>>;
   removeMember?: Resolver<ResolversTypes['Organization'], ParentType, ContextType, RequireFields<MutationRemoveMemberArgs, 'data'>>;
@@ -4810,6 +4797,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   pluginCreationAllowed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   posts?: Resolver<Maybe<ResolversTypes['PostsConnection']>, ParentType, ContextType, Partial<UserPostsArgs>>;
   registeredEvents?: Resolver<Maybe<Array<Maybe<ResolversTypes['Event']>>>, ParentType, ContextType>;
+  tagsAssigned?: Resolver<Maybe<Array<Maybe<ResolversTypes['UserTag']>>>, ParentType, ContextType>;
   tagsAssignedWith?: Resolver<Maybe<ResolversTypes['UserTagsConnection']>, ParentType, ContextType, Partial<UserTagsAssignedWithArgs>>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

@@ -658,6 +658,7 @@ export const types = gql`
       last: PositiveInt
       organizationId: ID
     ): UserTagsConnection
+    tagsAssigned: [UserTag]
     updatedAt: DateTime!
   }
   type AppUserProfile {
