@@ -120,11 +120,10 @@ export const removeFromUserTags: MutationResolvers["removeFromUserTags"] =
       _id: { $in: args.input.selectedTagIds },
     }).lean();
 
-    console.log("here");
     const selectedTagMap = new Map(
       selectedTags.map((tag) => [tag._id.toString(), tag]),
     );
-    
+
     if (selectedTags.length === 0) {
       throw new errors.NotFoundError(
         requestContext.translate(TAG_NOT_FOUND.MESSAGE),
@@ -132,7 +131,22 @@ export const removeFromUserTags: MutationResolvers["removeFromUserTags"] =
         TAG_NOT_FOUND.PARAM,
       );
     }
-    
+
+    // find the ancestor tags of current tag
+    const currentTagAncestors = new Set<string>();
+    let currentTagToProcess: InterfaceOrganizationTagUser | null = currentTag;
+    while (currentTagToProcess) {
+      currentTagAncestors.add(currentTagToProcess._id.toString());
+      if (currentTagToProcess.parentTagId) {
+        const parentTag: any = await OrganizationTagUser.findOne({
+          _id: currentTagToProcess.parentTagId,
+        }).lean();
+        currentTagToProcess = parentTag || null;
+      } else {
+        currentTagToProcess = null;
+      }
+    }
+
     // Find and remove ancestor tags
     const allTagsToRemove = new Set<string>();
     for (const tag of selectedTags) {
