@@ -291,6 +291,10 @@ export const inputs = gql`
     creatorId_not_in: [ID!]
   }
 
+  input UserTagWhereInput {
+    name_starts_with: String
+  }
+
   input MessageChatInput {
     message: String!
     receiver: ID!

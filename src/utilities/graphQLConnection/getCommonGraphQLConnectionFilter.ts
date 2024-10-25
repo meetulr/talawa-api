@@ -2,17 +2,23 @@ import { Types } from "mongoose";
 import type { GraphQLConnectionTraversalDirection } from "./index";
 
 /**
- * This is typescript type of the object returned from function `getCommonGraphQLConnectionFilter`.
+ * This is the TypeScript type of the object returned from the function `getCommonGraphQLConnectionFilter`.
  */
-type CommonGraphQLConnectionFilter =
+export type CommonGraphQLConnectionFilter =
   | {
       _id: {
         $lt: Types.ObjectId;
+      };
+      name?: {
+        $regex: RegExp;
       };
     }
   | {
       _id: {
         $gt: Types.ObjectId;
+      };
+      name?: {
+        $regex: RegExp;
       };
     }
   | Record<string, never>;
@@ -21,49 +27,47 @@ type CommonGraphQLConnectionFilter =
  * This function is used to get an object containing common mongoose filtering logic.
  *
  * @remarks
+ * Here are a few assumptions this function makes which are common to most of the GraphQL connections.
  *
- * Here are a few assumptions this function makes which are common to most of the
- * graphQL connections.
- *
- * The entity that has the latest creation datetime must appear at the top of the connection. This
- * means the default filtering logic would be to filter in descending order by the time of creation of
- * an entity, and if two or more entities have the same time of creation filtering in descending order
- * by the primary key of the entity. MongoDB object ids are lexographically sortable all on their own
- * because they contain information about both the creation time and primary key for the document.
- *
- * Therefore, this function only returns filtering logic for filtering by the object id of a mongoDB
- * document.
+ * The entity that has the latest creation datetime must appear at the top of the connection.
  *
  * @example
- *
- * const filter = getCommonGraphQLConnectionFilter(\{
+ * const filter = getCommonGraphQLConnectionFilter({
  *  cursor: "65da3f8df35eb5bfd52c5368",
  *  direction: "BACKWARD"
- * \});
+ * });
  * const objectList = await User.find(filter).limit(10);
  */
 export function getCommonGraphQLConnectionFilter({
   cursor,
   direction,
+  where = {},
 }: {
   cursor: string | null;
   direction: GraphQLConnectionTraversalDirection;
+  where?: Record<string, any>; // Optional where parameter
 }): CommonGraphQLConnectionFilter {
+  const filter = {} as CommonGraphQLConnectionFilter; // Start with an empty filter
+
+  // Check if there's a name in the where input and convert it to a regex
+  if (where.name) {
+    filter.name = {
+      $regex: new RegExp(`^${where.name}`, "i"), // Create a case-insensitive regex for names starting with the input
+    };
+  }
+
+  // Handle cursor-based filtering
   if (cursor !== null) {
     if (direction === "BACKWARD") {
-      return {
-        _id: {
-          $gt: new Types.ObjectId(cursor),
-        },
+      filter._id = {
+        $gt: new Types.ObjectId(cursor),
       };
     } else {
-      return {
-        _id: {
-          $lt: new Types.ObjectId(cursor),
-        },
+      filter._id = {
+        $lt: new Types.ObjectId(cursor),
       };
     }
-  } else {
-    return {};
   }
+
+  return filter; // Return the constructed filter
 }

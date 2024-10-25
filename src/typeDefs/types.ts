@@ -727,6 +727,7 @@ export const types = gql`
       before: String
       first: PositiveInt
       last: PositiveInt
+      where: UserTagWhereInput
     ): UserTagsConnection
     """
     A connection field to traverse a list of User this UserTag is assigned

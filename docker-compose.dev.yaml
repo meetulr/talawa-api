@@ -7,8 +7,8 @@ services:
       - 27017:27017
     volumes:
       - mongodb-data:/data/db
-    networks:
-      - talawa-network
+    # networks:
+    #   - talawa-network
 
   redis-stack-server:
     image: redis/redis-stack-server:latest
@@ -16,24 +16,23 @@ services:
       - 6379:6379
     volumes:
       - redis-data:/data/redis
-    networks:
-      - talawa-network
+    # networks:
+    #   - talawa-network
 
-  minio:
-    image: minio/minio
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    environment:
-      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
-      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
-    command: server /data --console-address ":9001"
-    volumes:
-      - minio-data:/data
-    networks:
-      - talawa-network
+  # minio:
+  #   image: minio/minio
+  #   ports:
+  #     - "9000:9000"
+  #     - "9001:9001"
+  #   environment:
+  #     - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+  #     - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+  #   command: server /data --console-address ":9001"
+  #   volumes:
+  #     - minio-data:/data
+  #   networks:
+  #     - talawa-network
 
-<<<<<<< HEAD
   # talawa-api-dev:
   #   build:
   #     context: .
@@ -44,27 +43,11 @@ services:
   #   depends_on:
   #     - mongodb
   #     - redis-stack-server
+  #     - minio
   #   environment:
   #     - MONGO_DB_URL=mongodb://mongodb:27017
   #     - REDIS_HOST=redis-stack-server
   #     - REDIS_PORT=6379
-=======
-  talawa-api-dev:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    depends_on:
-      - mongodb
-      - redis-stack-server
-      - minio
-    environment:
-      - MONGO_DB_URL=mongodb://mongodb:27017
-      - REDIS_HOST=redis-stack-server
-      - REDIS_PORT=6379
->>>>>>> fb5076f344cd74d4e51c692cbc70fc337bf1ac39
 
   # caddy:
   #   image: caddy/caddy:2.2.1-alpine
@@ -82,15 +65,10 @@ services:
 volumes:
   mongodb-data:
   redis-data:
-<<<<<<< HEAD
   # caddy_data:
   # caddy_config:
-=======
-  caddy_data:
-  caddy_config:
-  minio-data:
+  # minio-data:
 
-networks:
-  talawa-network:
-    driver: bridge
->>>>>>> fb5076f344cd74d4e51c692cbc70fc337bf1ac39
+# networks:
+#   talawa-network:
+#     driver: bridge

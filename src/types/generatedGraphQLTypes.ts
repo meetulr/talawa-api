@@ -3130,6 +3130,7 @@ export type UserTagChildTagsArgs = {
   before?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['PositiveInt']['input']>;
   last?: InputMaybe<Scalars['PositiveInt']['input']>;
+  where?: InputMaybe<UserTagWhereInput>;
 };
 
 
@@ -3146,6 +3147,10 @@ export type UserTagUsersToAssignToArgs = {
   before?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['PositiveInt']['input']>;
   last?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+export type UserTagWhereInput = {
+  name_starts_with?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A default connection on the UserTag type. */
@@ -3553,6 +3558,7 @@ export type ResolversTypes = {
   UserPhone: ResolverTypeWrapper<UserPhone>;
   UserPhoneInput: UserPhoneInput;
   UserTag: ResolverTypeWrapper<InterfaceOrganizationTagUserModel>;
+  UserTagWhereInput: UserTagWhereInput;
   UserTagsConnection: ResolverTypeWrapper<Omit<UserTagsConnection, 'edges'> & { edges: Array<ResolversTypes['UserTagsConnectionEdge']> }>;
   UserTagsConnectionEdge: ResolverTypeWrapper<Omit<UserTagsConnectionEdge, 'node'> & { node: ResolversTypes['UserTag'] }>;
   UserType: UserType;
@@ -3750,6 +3756,7 @@ export type ResolversParentTypes = {
   UserPhone: UserPhone;
   UserPhoneInput: UserPhoneInput;
   UserTag: InterfaceOrganizationTagUserModel;
+  UserTagWhereInput: UserTagWhereInput;
   UserTagsConnection: Omit<UserTagsConnection, 'edges'> & { edges: Array<ResolversParentTypes['UserTagsConnectionEdge']> };
   UserTagsConnectionEdge: Omit<UserTagsConnectionEdge, 'node'> & { node: ResolversParentTypes['UserTag'] };
   UserWhereInput: UserWhereInput;

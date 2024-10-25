@@ -2,9 +2,12 @@ import type { UserTagResolvers } from "../../types/generatedGraphQLTypes";
 import type { InterfaceOrganizationTagUser } from "../../models";
 import { OrganizationTagUser } from "../../models";
 import {
+  CommonGraphQLConnectionFilter,
   getCommonGraphQLConnectionFilter,
   getCommonGraphQLConnectionSort,
   parseGraphQLConnectionArguments,
+  parseGraphQLConnectionArgumentsWithWhere,
+  ParseGraphQLConnectionWhereResult,
   transformToDefaultGraphQLConnection,
   type DefaultGraphQLArgumentError,
   type ParseGraphQLConnectionCursorArguments,
@@ -37,6 +40,8 @@ export const childTags: UserTagResolvers["childTags"] = async (
   parent,
   args,
 ) => {
+  const whereResult = parseWhere(args.where?.name_starts_with ?? undefined);
+
   const parseGraphQLConnectionArgumentsResult =
     await parseGraphQLConnectionArguments({
       args,
@@ -48,21 +53,41 @@ export const childTags: UserTagResolvers["childTags"] = async (
       maximumLimit: MAXIMUM_FETCH_LIMIT,
     });
 
-  if (!parseGraphQLConnectionArgumentsResult.isSuccessful) {
+  const parseGraphQLConnectionArgumentsWithWhereResult =
+    await parseGraphQLConnectionArgumentsWithWhere({
+      args,
+      parseWhereResult: whereResult,
+      parseCursor: (args) =>
+        parseCursor({
+          ...args,
+          parentTagId: parent._id,
+        }),
+      maximumLimit: MAXIMUM_FETCH_LIMIT,
+    });
+
+  console.log(parseGraphQLConnectionArgumentsResult);
+  console.log(parseGraphQLConnectionArgumentsWithWhereResult);
+
+  if (!parseGraphQLConnectionArgumentsWithWhereResult.isSuccessful) {
     throw new GraphQLError("Invalid arguments provided.", {
       extensions: {
         code: "INVALID_ARGUMENTS",
-        errors: parseGraphQLConnectionArgumentsResult.errors,
+        errors: parseGraphQLConnectionArgumentsWithWhereResult.errors,
       },
     });
   }
 
-  const { parsedArgs } = parseGraphQLConnectionArgumentsResult;
+  const { parsedArgs } = parseGraphQLConnectionArgumentsWithWhereResult;
+
+  const where = parsedArgs.where;
 
   const filter = getCommonGraphQLConnectionFilter({
     cursor: parsedArgs.cursor,
     direction: parsedArgs.direction,
+    where,
   });
+
+  console.log(parsedArgs.direction);
 
   const sort = getCommonGraphQLConnectionSort({
     direction: parsedArgs.direction,
@@ -78,6 +103,7 @@ export const childTags: UserTagResolvers["childTags"] = async (
       .lean()
       .exec(),
     OrganizationTagUser.find({
+      ...filter,
       parentTagId: parent._id,
     })
       .countDocuments()
@@ -137,3 +163,35 @@ export const parseCursor = async ({
     parsedCursor: cursorValue,
   };
 };
+
+export type TagFilter = {
+  name: string;
+};
+
+export function parseWhere(
+  name?: string,
+): ParseGraphQLConnectionWhereResult<TagFilter> {
+  const errors: DefaultGraphQLArgumentError[] = [];
+
+  if (!name) {
+    // If name is not provided, you can either set an error or allow all
+    return {
+      isSuccessful: true,
+      parsedWhere: { name: "" }, // Allow all tags
+    };
+  }
+
+  if (typeof name !== "string") {
+    errors.push({
+      message: "Invalid name provided. It must be a string.",
+      path: ["where"],
+    });
+    return { isSuccessful: false, errors };
+  }
+
+  // If the name is valid, return the parsed where object
+  return {
+    isSuccessful: true,
+    parsedWhere: { name: name.trim() }, // Ensure we trim the name
+  };
+}
